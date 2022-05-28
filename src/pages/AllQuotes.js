@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import QuoteList from "../components/quotes/QuoteList";
 
 const DUMMY_QUOTES = [
