@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { Route } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import HighlightedQuote from "../components/quotes/HighlightedQuote";
 import Comments from "../components/comments/Comments";
@@ -21,10 +21,21 @@ const QuoteDetail = () => {
     return <p>No quote found!</p>;
   }
 
+  const detailPath = `/quotes/${params.quoteId}`;
+  const commentsPath = `${detailPath}/comments`;
+
   return (
     <Fragment>
       <HighlightedQuote text={quote.text} author={quote.author} />
-      <Route path={`/quotes/${params.quoteId}/comments`}>
+      {/* we added a route here to only show the load comments button if we are on the detail route, else it should not be shown */}
+      <Route path={detailPath} exact>
+        <div className="centered">
+          <Link className="btn--flat" to={commentsPath}>
+            Load comments
+          </Link>
+        </div>
+      </Route>
+      <Route path={commentsPath}>
         <Comments />
       </Route>
     </Fragment>
