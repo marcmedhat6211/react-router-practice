@@ -1,12 +1,22 @@
+import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 import QuoteForm from "../components/quotes/QuoteForm";
+import useHttp from "../hooks/use-http";
+import { addQuote } from "../lib/api";
 
 const NewQuote = () => {
+  const { sendRequest, status } = useHttp(addQuote);
   const history = useHistory(); // the useHistory hook gets back an object with the browser history
 
+  useEffect(() => {
+    if (status === "completed") {
+      history.push("/quotes");
+    }
+  }, [status, history]);
+
   const addQuoteHandler = (quoteData) => {
-    console.log(quoteData);
+    sendRequest(quoteData);
 
     /**
      * The push and the replace method, both allows us to navigate to another route
@@ -16,10 +26,12 @@ const NewQuote = () => {
      *  replace:
      *    doesn't allow the user to go back because it replaces the current route in the browser history
      */
-    history.push("/quotes");
+    // history.push("/quotes");
   };
 
-  return <QuoteForm onAddQuote={addQuoteHandler} />;
+  return (
+    <QuoteForm isLoading={status === "pending"} onAddQuote={addQuoteHandler} />
+  );
 };
 
 export default NewQuote;
