@@ -1,6 +1,5 @@
 import { Fragment } from "react";
-import { Route } from "react-router-dom";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Route, useRouteMatch } from "react-router-dom";
 
 import HighlightedQuote from "../components/quotes/HighlightedQuote";
 import Comments from "../components/comments/Comments";
@@ -14,6 +13,13 @@ const DUMMY_QUOTES = [
 
 const QuoteDetail = () => {
   const params = useParams();
+  /**
+   * The useRouteMatch hook returns an object with information about the current route
+   * like path and url
+   * the path is the exact path we are defining in the app.js file // quotes/:quoteId
+   * the url is the exact url with its parameters included // quotes/q1
+   */
+  const match = useRouteMatch();
 
   const quote = DUMMY_QUOTES.find((quote) => quote.id === params.quoteId);
 
@@ -21,21 +27,20 @@ const QuoteDetail = () => {
     return <p>No quote found!</p>;
   }
 
-  const detailPath = `/quotes/${params.quoteId}`;
-  const commentsPath = `${detailPath}/comments`;
-
   return (
     <Fragment>
       <HighlightedQuote text={quote.text} author={quote.author} />
       {/* we added a route here to only show the load comments button if we are on the detail route, else it should not be shown */}
-      <Route path={detailPath} exact>
+      {/* We can use the match.path here because we are just defining a route */}
+      <Route path={match.path} exact>
         <div className="centered">
-          <Link className="btn--flat" to={commentsPath}>
+          {/* We are using the match.url here because this is a link */}
+          <Link className="btn--flat" to={`${match.url}/comments`}>
             Load comments
           </Link>
         </div>
       </Route>
-      <Route path={commentsPath}>
+      <Route path={`${match.path}/comments`}>
         <Comments />
       </Route>
     </Fragment>

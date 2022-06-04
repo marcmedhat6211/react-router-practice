@@ -24,7 +24,16 @@ const QuoteList = (props) => {
   const sortedQuotes = sortQuotes(props.quotes, isSortingAscending);
 
   const changeSortingHandler = () => {
-    history.push("/quotes?sort=" + (isSortingAscending ? "desc" : "asc"));
+    // history.push(
+    //   `${location.pathname}?sort=${isSortingAscending ? "desc" : "asc"}`
+    // );
+    /**
+     * You can also pass an object to the push method and construct the url in a more readable way using the below approach
+     */
+    history.push({
+      pathname: location.pathname,
+      search: `?sort=${isSortingAscending ? "desc" : "asc"}`,
+    });
   };
 
   return (
